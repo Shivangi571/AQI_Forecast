@@ -20,7 +20,13 @@ CITY_CODE = {c: i for i, c in enumerate(sorted(CITIES))}
 AQ_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
 WX_URL = "https://api.open-meteo.com/v1/forecast"
 
-saved = joblib.load("models/aqi_model.joblib")
+import os, glob
+BASE = os.path.dirname(os.path.abspath(__file__))
+found = glob.glob(os.path.join(BASE, "**", "aqi_model.joblib"), recursive=True)
+if not found:
+    st.error("Model file not found. Files I can see: " + str(os.listdir(BASE)))
+    st.stop()
+saved = joblib.load(found[0])
 model, features = saved["model"], saved["features"]
 
 
